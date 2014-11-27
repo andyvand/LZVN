@@ -30,8 +30,8 @@ all: lzvn
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
 
-libFastCompression.a: lzvn_enc.o lzvn_size.o
-	$(AR) $(ARFLAGS) $@ lzvn_enc.o lzvn_size.o
+libFastCompression.a: lzvn_enc.o lzvn_size.o lzvn_encode.o
+	$(AR) $(ARFLAGS) $@ lzvn_enc.o lzvn_size.o lzvn_encode.o
 	$(RANLIB) libFastCompression.a
 
 lzvn: lzvn.o libFastCompression.a

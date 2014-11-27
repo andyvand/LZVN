@@ -3,27 +3,6 @@
 
 .extern _memcpy
 .globl _lzvn_encode_partial
-.globl _lzvn_encode
-
-_lzvn_encode:
-	pushq	%rbp
-	movq	%rsp, %rbp
-	pushq	%rbx
-	pushq	%rax
-	movq	%r8, %rax
-	movq	%rcx, %rbx
-	movq	$0x0, -0x10(%rbp)
-	leaq	-0x10(%rbp), %r8
-	movq	%rax, %r9
-	callq	_lzvn_encode_partial
-	xorl	%ecx, %ecx
-	cmpq	%rbx, -0x10(%rbp)
-	cmoveq	%rax, %rcx
-	movq	%rcx, %rax
-	addq	$0x8, %rsp
-	popq	%rbx
-	popq	%rbp
-	retq
 
 _lzvn_encode_partial:
 	pushq	%rbp
