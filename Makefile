@@ -8,15 +8,13 @@
 
 PREFIX=/usr/local
 
-AS=gcc
 AR=ar
 CC=gcc
 RANLIB=ranlib
 INSTALL=install
 CODESIGN=codesign
-ASFLAGS=-g0 -arch x86_64 -c
 ARFLAGS=cru
-CFLAGS=-g0 -arch x86_64 -Ofast
+CFLAGS=-g0 -arch i386 -arch x86_64 -Ofast
 
 ### Change to "" for no signing or "Something: Me..." for signing ###
 SIGNCERT="Developer ID Application: Andy Vandijck (GSF3NR4NQ5)"
@@ -24,14 +22,11 @@ PKGSIGNCERT="Developer ID Installer: Andy Vandijck (GSF3NR4NQ5)"
 
 all: lzvn
 
-.s.o:
-	$(AS) $(ASFLAGS) -o $@ $<
-
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
 
-libFastCompression.a: lzvn_encode_partial.o lzvn_size.o lzvn_encode.o
-	$(AR) $(ARFLAGS) $@ lzvn_encode_partial.o lzvn_size.o lzvn_encode.o
+libFastCompression.a: lzvn_encode_partial.o lzvn_size.o lzvn_encode.o lzvn_decode.o
+	$(AR) $(ARFLAGS) $@ lzvn_encode_partial.o lzvn_size.o lzvn_encode.o lzvn_decode.o
 	$(RANLIB) libFastCompression.a
 
 lzvn: lzvn.o libFastCompression.a
@@ -39,7 +34,7 @@ lzvn: lzvn.o libFastCompression.a
 	if [ $(SIGNCERT) != "" ]; then $(CODESIGN) -s $(SIGNCERT) $@; fi
 
 clean:
-	sudo rm -Rf *.o lzvn lzvninst lzvnpkg Payload Bom lzvncombopkg lzvn.pkg lzvn-apple.pkg
+	sudo rm -Rf *.o *.a lzvn lzvninst lzvnpkg Payload Bom lzvncombopkg lzvn.pkg lzvn-apple.pkg
 
 install: lzvn.h
 	$(INSTALL) lzvn $(PREFIX)/bin
